@@ -87,3 +87,14 @@ def draw_maze(screen, coins):
                 pygame.draw.rect(screen, (0, 0, 255), (x, y, TILE_SIZE, TILE_SIZE))
             elif coins[row_idx][col_idx]:
                 pygame.draw.circle(screen, (255, 200, 100), (x + TILE_SIZE // 2, y + TILE_SIZE // 2), TILE_SIZE // 8)
+
+
+
+def get_wall_rects():
+    wall_rects = []
+    for row_idx, row in enumerate(MAZE_LAYOUT):
+        for col_idx, tile in enumerate(row):
+            if tile == '1':
+                rect = pygame.Rect(col_idx * TILE_SIZE, row_idx * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                wall_rects.append(rect)
+    return wall_rects
