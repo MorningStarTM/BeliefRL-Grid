@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ToM-pacman-env"
+version = "0.1.0"
+description = "A custom ToM Pac-Man RL environment for OpenAI Gymnasium."
+authors = [
+  { name="Ernest Paul", email="ernestbeckham7324@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    "gymnasium",
+    "pygame",
+    "numpy"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/MorningStarTM/BeliefRL-Grid"
