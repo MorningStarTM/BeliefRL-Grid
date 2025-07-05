@@ -1,11 +1,17 @@
 # BeliefRL-Grid
 A grid-based environment where Pac-Man learns to act by modeling the beliefs of ghost agents. Built for research in belief-aware policies, theory of mind, and multi-agent RL.
 
+## Example Gameplay
+
+Check out a sample run:
+
+![Pac-Man Demo](pac_man/assets/pacman_run.gif)
+
 ## Installation
 
 ```bash
 git clone https://github.com/MorningStarTM/BeliefRL-Grid.git
-cd pac_man_env
+cd pac_man
 pip install -e . 
 
 ```
@@ -24,7 +30,7 @@ while not done:
 env.close()
 ```
 
-## Register The Env for Gymnasium (Optional)**
+## Register The Env for Gymnasium (Optional)
 Add a line in your main `__init__.py`:
 ```python
 import gymnasium as gym
