@@ -171,3 +171,37 @@ class PacManEnv(gym.Env):
     def close(self):
         if hasattr(self, 'screen'):
             pygame.quit()
+
+
+
+class FlattenObsWrapper:
+    """Wrap PacManEnv to flatten obs to 1D state (numpy array) for PPO agent."""
+    def __init__(self, env):
+        self.env = env
+
+    def reset(self):
+        obs = self.env.reset()
+        return obs_to_state(obs), {}
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        return obs_to_state(obs), reward, done, False, info
+
+    def render(self, *args, **kwargs):
+        self.env.render(*args, **kwargs)
+
+    def close(self):
+        self.env.close()
+
+
+
+
+def obs_to_state(obs):
+        # Example: flatten all obs into 1D numpy array (adjust if your model expects differently)
+        state = []
+        state.extend(obs['pacman']['pos'].tolist())
+        state.extend(obs['pacman']['direction'].tolist())
+        state.append(obs['pacman']['last_action'])
+        state.extend(obs['ghosts'].flatten().tolist())
+        state.extend(obs['coins'].tolist())
+        return state
