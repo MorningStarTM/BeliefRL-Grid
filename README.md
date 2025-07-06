@@ -43,3 +43,15 @@ gym.envs.registration.register(
 
 
 env = gym.make("ToMPacMan-v0")
+```
+
+## Train PPO Agent
+ 1. Define your config file inside of model_training.py
+ 2. Run training file
+    ```bash
+    python model_training.py
+    ```
+ 3. Model weight will be saved in Models folder
+ 4. Run test.py to test Agent
+
+ 
