@@ -11,7 +11,7 @@ Check out a sample run:
 
 ```bash
 git clone https://github.com/MorningStarTM/BeliefRL-Grid.git
-cd pac_man
+cd BeliefRL-Grid
 pip install -e . 
 
 ```
