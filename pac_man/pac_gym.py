@@ -86,27 +86,20 @@ class PacManEnv(gym.Env):
                 ghost.move(self.pacman, self.blinky)
             else:
                 ghost.move(self.pacman)
-            # After moving, determine action index by difference in position
             dx = ghost.rect.x - prev_pos[0]
             dy = ghost.rect.y - prev_pos[1]
             dir_idx = 4  # NOOP default
-            if dx == -TILE_SIZE and dy == 0:
+            if dx < 0 and dy == 0:
                 dir_idx = 0  # LEFT
-            elif dx == TILE_SIZE and dy == 0:
+            elif dx > 0 and dy == 0:
                 dir_idx = 1  # RIGHT
-            elif dx == 0 and dy == -TILE_SIZE:
+            elif dx == 0 and dy < 0:
                 dir_idx = 2  # UP
-            elif dx == 0 and dy == TILE_SIZE:
+            elif dx == 0 and dy > 0:
                 dir_idx = 3  # DOWN
             self.last_ghost_actions[idx] = dir_idx
 
-        
-        # 3. Move ghosts (classic logic, not RL agents)
-        for ghost in self.ghosts:
-            if ghost is self.inky:
-                ghost.move(self.pacman, self.blinky)
-            else:
-                ghost.move(self.pacman)
+
         
         # 4. Check collision
         for ghost in self.ghosts:
