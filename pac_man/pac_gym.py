@@ -27,19 +27,19 @@ class PacManEnv(gym.Env):
         n_features = 2 + 1 + 1 + 2*4 + 4 + 4 + (rows * cols)
 
         self.observation_space = Dict({
-                    "pacman": Dict({
-                        "pos": Box(0, max(ROWS, COLS), shape=(2,), dtype=np.int32),
-                        "direction": Box(-1, 1, shape=(2,), dtype=np.int32),
-                        "last_action": Discrete(5)
-                    }),
-                    "ghosts": Box(
-                        low=np.array([[-1, -1, 0, 0, 0]]*4),    # shape (4, 5) -- no last_action
-                        high=np.array([[ROWS, COLS, 1, 1, 1]]*4),
-                        shape=(4, 5),
-                        dtype=np.int32
-                    ),
-                    "coins": MultiBinary(ROWS * COLS)
-                })
+                                    "pacman": Dict({
+                                        "pos": Box(0, max(ROWS, COLS), shape=(2,), dtype=np.int32),
+                                        "direction": Box(-1, 1, shape=(2,), dtype=np.int32),
+                                        "last_action": Discrete(5)
+                                    }),
+                                    "ghosts": Box(
+                                        low=np.array([[0, 0, -1, -1, 0, 0]]*4),    # shape (4, 6)
+                                        high=np.array([[ROWS, COLS, 1, 1, 1, 4]]*4),
+                                        shape=(4, 6),
+                                        dtype=np.int32
+                                    ),
+                                    "coins": MultiBinary(ROWS * COLS)
+                                })
 
 
         
@@ -116,23 +116,20 @@ class PacManEnv(gym.Env):
         return self._get_obs(), reward, self.done, {}
 
     def _get_obs(self):
-        VISION_RADIUS = 3  # or your chosen distance
         pac_row = self.pacman.rect.y // TILE_SIZE
         pac_col = self.pacman.rect.x // TILE_SIZE
-        pac_dir = [int(np.sign(self.pacman.direction.x)), int(np.sign(self.pacman.direction.y))]
+        pac_dir = [int(np.sign(self.pacman.direction.x)), int(np.sign(self.pacman.direction.y))]  # -1, 0, or 1
         pac_last = self.last_pacman_action
 
-        ghosts_array = np.full((4, 5), -1, dtype=np.int32)  # Masked by default: [-1, -1, 0, 0, 0]
+        ghosts_array = np.zeros((4, 6), dtype=np.int32)
         for i, ghost in enumerate(self.ghosts):
             row = ghost.rect.y // TILE_SIZE
             col = ghost.rect.x // TILE_SIZE
-            dist = abs(row - pac_row) + abs(col - pac_col)
-            if dist <= VISION_RADIUS:
-                dir_x = int(np.sign(ghost.direction.x))
-                dir_y = int(np.sign(ghost.direction.y))
-                state = int(ghost.state == 'CHASE')
-                ghosts_array[i] = [row, col, dir_x, dir_y, state]
-            # else, remains masked as [-1, -1, 0, 0, 0]
+            dir_x = int(np.sign(ghost.direction.x))
+            dir_y = int(np.sign(ghost.direction.y))
+            state = int(ghost.state == 'CHASE')
+            last_action = self.last_ghost_actions[i]
+            ghosts_array[i] = [row, col, dir_x, dir_y, state, last_action]
 
         flat_coins = np.array([int(cell) for row in self.coins for cell in row], dtype=np.int8)
 
@@ -146,7 +143,6 @@ class PacManEnv(gym.Env):
             "coins": flat_coins
         }
         return obs
-
 
 
     def render(self, mode='human'):
